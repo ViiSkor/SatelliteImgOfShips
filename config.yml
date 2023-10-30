@@ -13,6 +13,7 @@ preprocessing:
   img_scaling: (3, 3) # downsampling in preprocessing
 
 train:
+  learning_rate: 1e-3
   batch_size: 64
   epochs: 100
   steps: 10

@@ -6,13 +6,10 @@ from tensorflow.keras import models, layers
 from core.model.blocks import upsample_conv, upsample_simple, encoder_block, decoder_block
 
 
-def init_model(
-        upsample_mode: Literal['DECONV', 'SIMPLE'],
-        net_scaling: tuple[int, int],
-        n_filters=8,
-        input_shape: tuple=(256, 256, 3)
-) -> models.Model:
-    if upsample_mode == 'DECONV':
+def init_model(config, input_shape: tuple = (256, 256, 3)) -> models.Model:
+    n_filters = config['n_filters']
+
+    if config['upsample_mode'] == 'DECONV':
         upsample = upsample_conv
     else:
         upsample = upsample_simple
@@ -20,10 +17,10 @@ def init_model(
     input_img = layers.Input(input_shape, name='RGB_Input')
     pp_in_layer = input_img
 
-    if net_scaling is not None:
-        pp_in_layer = layers.AvgPool2D(net_scaling)(pp_in_layer)
+    if config['net_scaling'] is not None:
+        pp_in_layer = layers.AvgPool2D(config['net_scaling'])(pp_in_layer)
 
-    pp_in_layer = layers.GaussianNoise(GAUSSIAN_NOISE)(pp_in_layer)
+    pp_in_layer = layers.GaussianNoise(config['gaussian_noise'])(pp_in_layer)
     pp_in_layer = layers.BatchNormalization()(pp_in_layer)
 
     enc1 = encoder_block(pp_in_layer, n_filters)
@@ -41,8 +38,8 @@ def init_model(
 
     dec = layers.Conv2D(1, (1, 1), activation='sigmoid')(dec4)
 
-    if net_scaling is not None:
-        dec = layers.UpSampling2D(net_scaling)(dec)
+    if config['net_scaling'] is not None:
+        dec = layers.UpSampling2D(config['net_scaling'])(dec)
 
     model = models.Model(inputs=[input_img], outputs=[dec])
     return model

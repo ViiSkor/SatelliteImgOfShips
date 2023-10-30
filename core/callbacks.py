@@ -1,4 +1,14 @@
+from typing import List
 from tensorflow import keras
+from tensorflow.keras.callbacks import ModelCheckpoint, LearningRateScheduler, EarlyStopping, ReduceLROnPlateau
+
+
+def get_callbacks(model_name: str, config: dict) -> List:
+    weight_path=f'{model_name}_weights.best.hdf5'
+    checkpoint = ModelCheckpoint(weight_path, monitor='val_loss', verbose=1, mode='min', **config['checkpoint'])
+    reduceLROnPlat = ReduceLROnPlateau(monitor='val_loss', verbose=1, mode='min', **config['reduceLROnPlat'])
+    early_stopping = EarlyStopping(monitor='val_loss', mode='min', verbose=2, **config['EarlyStopping'])
+    return [checkpoint, early_stopping, reduceLROnPlat]
 
 
 class DisplayCallback(keras.callbacks.Callback):
