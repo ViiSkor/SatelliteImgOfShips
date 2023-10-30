@@ -14,14 +14,13 @@ def undersample(unique_img_ids: pd.DataFrame, samples_per_group: int) -> pd.Data
 
 def create_img_gen(
         in_df: pd.DataFrame,
-        batch_size: int,
         img_scaling: Optional[tuple[int, int]],
         shuffle_batches: bool=True,
         do_augmentation: bool=True,
         transform: Optional[A.Compose]=None
 ) -> Tuple[list, list]:
     all_batches = list(in_df.groupby('ImageId'))
-    out_rgb, out_mask = [], []
+
     while True:
         if shuffle_batches:
             np.random.shuffle(all_batches)
@@ -40,9 +39,4 @@ def create_img_gen(
                 c_img = transformed['image']
                 c_mask = transformed['mask']
 
-            out_rgb += [c_img]
-            out_mask += [c_mask]
-
-            if len(out_rgb) >= batch_size:
-                yield np.stack(out_rgb, 0) / 255.0, np.stack(out_mask, 0)
-                out_rgb, out_mask = [], []
+            yield c_img / 255.0, c_mask

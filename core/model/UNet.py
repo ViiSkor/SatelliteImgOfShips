@@ -1,5 +1,6 @@
 from typing import Callable, Union, Tuple, Literal
 from tensorflow.keras import models, layers
+from core.model.blocks import upsample_conv, upsample_simple, encoder_block, decoder_block
 
 
 def init_model(
