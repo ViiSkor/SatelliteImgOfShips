@@ -6,6 +6,8 @@ import pandas as pd
 import albumentations as A
 from skimage.io import imread
 
+from core.utils import masks_as_image
+
 
 def undersample(unique_img_ids: pd.DataFrame, samples_per_group: int) -> pd.DataFrame:
     return unique_img_ids.groupby('ships').apply(
@@ -14,6 +16,7 @@ def undersample(unique_img_ids: pd.DataFrame, samples_per_group: int) -> pd.Data
 
 def create_img_gen(
         in_df: pd.DataFrame,
+        img_dir,
         img_scaling: Optional[tuple[int, int]],
         shuffle_batches: bool=True,
         do_augmentation: bool=True,
@@ -26,7 +29,7 @@ def create_img_gen(
             np.random.shuffle(all_batches)
 
         for c_img_id, c_masks in all_batches:
-            rgb_path = os.path.join(train_image_dir, c_img_id)
+            rgb_path = os.path.join(img_dir, c_img_id)
             c_img = imread(rgb_path)
             c_mask = np.expand_dims(masks_as_image(c_masks['EncodedPixels'].values), -1)
 

@@ -24,4 +24,9 @@ train:
     min_lr: 1e-8
     cooldown: 0
   EarlyStopping:
-    patience: 30
+    patience: 10
+  checkpoint:
+    save_best_only: True
+    save_weights_only: True
+
+

@@ -20,7 +20,7 @@ def init_model(
     input_img = layers.Input(input_shape, name='RGB_Input')
     pp_in_layer = input_img
 
-    if NET_SCALING is not None:
+    if net_scaling is not None:
         pp_in_layer = layers.AvgPool2D(net_scaling)(pp_in_layer)
 
     pp_in_layer = layers.GaussianNoise(GAUSSIAN_NOISE)(pp_in_layer)
@@ -42,7 +42,7 @@ def init_model(
     dec = layers.Conv2D(1, (1, 1), activation='sigmoid')(dec4)
 
     if net_scaling is not None:
-        dec = layers.UpSampling2D(NET_SCALING)(dec)
+        dec = layers.UpSampling2D(net_scaling)(dec)
 
     model = models.Model(inputs=[input_img], outputs=[dec])
     return model
