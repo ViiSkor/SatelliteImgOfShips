@@ -6,7 +6,7 @@ import pandas as pd
 import dask.dataframe as dd
 
 
-def get_metadata(mask_dir: str, npartitions: int=8) -> Tuple[pd.DataFrame, pd.DataFrame]:
+def get_metadata(mask_dir: str, train_image_dir: str, npartitions: int=8) -> Tuple[pd.DataFrame, pd.DataFrame]:
     masks = pd.read_csv(mask_dir)
     not_empty = pd.notna(masks.EncodedPixels)
     masks = dd.from_pandas(masks, npartitions=npartitions)

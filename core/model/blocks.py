@@ -1,4 +1,6 @@
 from typing import Callable, Union, Tuple
+
+import tensorflow as tf
 from tensorflow.keras import layers
 
 

@@ -1,14 +1,6 @@
-import os
 import numpy as np
-import pandas as pd
-from skimage.io import imread
 import matplotlib.pyplot as plt
-from matplotlib.cm import get_cmap
-import tensorflow as tf
-from skimage.util import montage
-import dask.dataframe as dd
-import albumentations as A
-from skimage.morphology import disk, binary_opening, label
+from skimage.io import imread
 
 
 def show_loss(loss_history):

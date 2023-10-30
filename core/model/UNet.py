@@ -1,5 +1,8 @@
 from typing import Callable, Union, Tuple, Literal
+
+import pandas as pd
 from tensorflow.keras import models, layers
+
 from core.model.blocks import upsample_conv, upsample_simple, encoder_block, decoder_block
 
 
