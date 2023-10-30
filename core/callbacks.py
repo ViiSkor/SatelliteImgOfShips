@@ -1,8 +1,9 @@
 from tensorflow import keras
 
 class DisplayCallback(keras.callbacks.Callback):
-    def __init__(self, test_images, epoch_interval=None):
+    def __init__(self, test_images, batch_size, epoch_interval=None):
         self.test_images = test_images
+        self.batch_size = batch_size
         self.epoch_interval = epoch_interval
 
     def on_epoch_end(self, epoch, logs=None):
@@ -12,7 +13,7 @@ class DisplayCallback(keras.callbacks.Callback):
             pred_masks = pred_masks[..., tf.newaxis]
 
             # Randomly select an image from the test batch
-            random_index = random.randint(0, BATCH_SIZE - 1)
+            random_index = random.randint(0, self.batch_size - 1)
             random_image = test_images[random_index]
             random_pred_mask = pred_masks[random_index]
             random_true_mask = test_masks[random_index]
