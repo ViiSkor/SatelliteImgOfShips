@@ -1,5 +1,6 @@
 from tensorflow import keras
 
+
 class DisplayCallback(keras.callbacks.Callback):
     def __init__(self, test_images, batch_size, epoch_interval=None):
         self.test_images = test_images

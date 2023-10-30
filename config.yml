@@ -1,0 +1,27 @@
+meta:
+  img_height: 768
+  img_width: 768
+  seed: 42
+
+model:
+  n_filters: 8
+  upsample_mode: simple
+  net_scaling: (1, 1) # downsampling inside the network
+  gaussian_noise: 0.1
+
+preprocessing:
+  img_scaling: (3, 3) # downsampling in preprocessing
+
+train:
+  batch_size: 64
+  epochs: 100
+  steps: 10
+  shuffle: True
+  reduceLROnPlat:
+    factor: 0.33
+    patience: 2
+    min_delta: 0.0001
+    min_lr: 1e-8
+    cooldown: 0
+  EarlyStopping:
+    patience: 30
