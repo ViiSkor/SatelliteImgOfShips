@@ -42,7 +42,7 @@ source dst-env/bin/activate
 pip install -r requirements.txt
 ```
 
-# Run training
+### Run training
 ```
 import os
 import yaml
