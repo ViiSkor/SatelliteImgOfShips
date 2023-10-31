@@ -1,29 +1,33 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.cm import get_cmap
-from skimage.io import imread
+
+from core.inference import smooth, raw_prediction
+from core.utils import masks_as_color, multi_rle_encode
 
 
 def show_loss(loss_history):
     epochs = np.concatenate([mh.epoch for mh in loss_history])
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(22, 10))
+    _, (ax1, ax2) = plt.subplots(1, 2, figsize=(22, 10))
 
     _ = ax1.plot(epochs, np.concatenate([mh.history['loss'] for mh in loss_history]), 'b-',
                  epochs, np.concatenate([mh.history['val_loss'] for mh in loss_history]), 'r-')
     ax1.legend(['Training', 'Validation'])
     ax1.set_title('Loss')
 
-    _ = ax2.plot(epochs, np.concatenate([mh.history['binary_accuracy'] for mh in loss_history]), 'b-',
-                 epochs, np.concatenate([mh.history['val_binary_accuracy'] for mh in loss_history]), 'r-')
+    _ = ax2.plot(
+        epochs, np.concatenate([mh.history['binary_accuracy'] for mh in loss_history]), 'b-',
+        epochs, np.concatenate([mh.history['val_binary_accuracy'] for mh in loss_history]), 'r-'
+    )
     ax2.legend(['Training', 'Validation'])
     ax2.set_title('Binary Accuracy (%)')
 
 
-def visualize_preds(model, img_dir):
+def visualize_preds(model, img_dir, masks, df):
     ## Get a sample of each group of ship count
-    samples = valid_df.groupby('ships').apply(lambda x: x.sample(1))
-    fig, m_axs = plt.subplots(samples.shape[0], 4, figsize = (15, samples.shape[0]*4))
-    [c_ax.axis('off') for c_ax in m_axs.flatten()]
+    samples = df.groupby('ships').apply(lambda x: x.sample(1))
+    _, m_axs = plt.subplots(samples.shape[0], 4, figsize = (15, samples.shape[0]*4))
+    _ = [c_ax.axis('off') for c_ax in m_axs.flatten()]
 
     for (ax1, ax2, ax3, ax4), c_img_name in zip(m_axs, samples.ImageId.values):
         first_seg, first_img = raw_prediction(model, c_img_name, img_dir)
@@ -34,6 +38,8 @@ def visualize_preds(model, img_dir):
         reencoded = masks_as_color(multi_rle_encode(smooth(first_seg)[:, :, 0]))
         ax3.imshow(reencoded)
         ax3.set_title('Prediction Masks')
-        ground_truth = masks_as_color(masks.query('ImageId=="{}"'.format(c_img_name))['EncodedPixels'])
+        ground_truth = masks_as_color(
+            masks.query(f'ImageId=="{c_img_name}"')['EncodedPixels']
+        )
         ax4.imshow(ground_truth)
         ax4.set_title('Ground Truth')

@@ -1,7 +1,7 @@
 # [DS Basics | Project sample] Satellite Images Of Ships
 This project is a example of basic data science project.
 
-#### - Project Status: [Completed]
+#### - Project Status: [In Process]
 
 ## Project Objective
 The Airbus Ship Detection Challenge aims to develop advanced machine learning solutions for accurately detecting and classifying ships in satellite imagery. This technology has the potential to bolster maritime security, protect marine ecosystems, and improve trade efficiency, contributing to a safer and more sustainable future for our oceans and society.
@@ -35,6 +35,9 @@ The Airbus Ship Detection Challenge aims to develop advanced machine learning so
 *If your project is well underway and setup is fairly complicated (ie. requires installation of many packages) create another "setup.md" file and link to it here*  
 
 5. Follow setup [instructions](Link to file)
+
+### Run Pyling
+```pylint core/*```
 
 ## Featured Notebooks
 * [EDA Notebook](link)

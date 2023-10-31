@@ -5,13 +5,16 @@ from tensorflow.keras import layers
 
 
 def upsample_conv(
-        filters: int, kernel_size: tuple[int, int], strides: tuple[int, int], padding: Union['valid', 'same']
+        filters: int,
+        kernel_size: tuple[int, int],
+        strides: tuple[int, int],
+        padding: Union['valid', 'same']
 ) -> tf.Tensor:
     return layers.Conv2DTranspose(filters, kernel_size, strides=strides, padding=padding)
 
 
 def upsample_simple(
-        filters: int, kernel_size: tuple[int, int], strides: tuple[int, int], padding: Union['valid', 'same']
+        strides: tuple[int, int]
 ) -> tf.Tensor:
     return layers.UpSampling2D(strides)
 

@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import albumentations as A
 from skimage.io import imread
+from sklearn.model_selection import train_test_split
 
 from core.utils import masks_as_image
 
@@ -14,8 +15,10 @@ def undersample(unique_img_ids: pd.DataFrame, samples_per_group: int) -> pd.Data
         lambda x: x.sample(samples_per_group) if len(x) > samples_per_group else x)
 
 
-def get_train_val_sets(balanced_df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    train_ids, valid_ids = train_test_split(balanced_df, test_size=0.2, stratify=balanced_df['ships'])
+def get_train_val_sets(balanced_df: pd.DataFrame, masks: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    train_ids, valid_ids = train_test_split(
+        balanced_df, test_size=0.2, stratify=balanced_df['ships']
+    )
     train_df = pd.merge(masks, train_ids)
     valid_df = pd.merge(masks, valid_ids)
     return train_df, valid_df

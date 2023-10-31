@@ -4,23 +4,25 @@ from typing import Optional
 
 import numpy as np
 import tensorflow as tf
+from skimage.util import montage
+from skimage.morphology import label
 
 DEFAULT_RANDOM_SEED = 42
 
 
-def seedBasic(seed: int=DEFAULT_RANDOM_SEED):
+def seed_basic(seed: int=DEFAULT_RANDOM_SEED):
     random.seed(seed)
     os.environ['PYTHONHASHSEED'] = str(seed)
     np.random.seed(seed)
 
 
-def seedTF(seed: int=DEFAULT_RANDOM_SEED):
+def seed_tf(seed: int=DEFAULT_RANDOM_SEED):
     tf.random.set_seed(seed)
 
 
-def seedEverything(seed: int=DEFAULT_RANDOM_SEED):
-    seedBasic(seed)
-    seedTF(seed)
+def seed_everything(seed: int=DEFAULT_RANDOM_SEED):
+    seed_basic(seed)
+    seed_tf(seed)
 
 
 def multi_rle_encode(img: np.array, **kwargs) -> list[str]:
@@ -29,13 +31,18 @@ def multi_rle_encode(img: np.array, **kwargs) -> list[str]:
     '''
     labels = label(img)
     if img.ndim > 2:
-        return [rle_encode(np.sum(labels == k, axis=2), **kwargs) for k in np.unique(labels[labels > 0])]
-    else:
-        return [rle_encode(labels == k, **kwargs) for k in np.unique(labels[labels > 0])]
+        return [
+            rle_encode(np.sum(labels == k, axis=2), **kwargs) for k in np.unique(labels[labels > 0])
+        ]
+    return [rle_encode(labels == k, **kwargs) for k in np.unique(labels[labels > 0])]
 
 
 # ref: https://www.kaggle.com/paulorzp/run-length-encode-and-decode
-def rle_encode(img: np.array, min_max_threshold: float = 1e-3, max_mean_threshold: Optional[float] = None) -> str:
+def rle_encode(
+        img: np.array,
+        min_max_threshold: float=1e-3,
+        max_mean_threshold: Optional[float]=None
+) -> str:
     '''
     img: numpy array, 1 - mask, 0 - background
     Returns run length as string formated
@@ -76,13 +83,17 @@ def masks_as_image(in_mask_list: list, img_shape: tuple[int, int] = (768, 768)) 
     return all_masks
 
 
+def scale(x, in_mask_list):
+    # scale the heatmap image to shift
+    return (len(in_mask_list) + x + 1) / (len(in_mask_list) * 2)
+
+
 def masks_as_color(in_mask_list: list, img_shape: tuple[int, int] = (768, 768)) -> np.array:
     # Take the individual ship masks and create a color mask array for each ships
     all_masks = np.zeros(img_shape, dtype=np.float)
-    scale = lambda x: (len(in_mask_list) + x + 1) / (len(in_mask_list) * 2)  ## scale the heatmap image to shift
     for i, mask in enumerate(in_mask_list):
         if isinstance(mask, str):
-            all_masks[:, :] += scale(i) * rle_decode(mask)
+            all_masks[:, :] += scale(i, in_mask_list) * rle_decode(mask)
     return all_masks
 
 

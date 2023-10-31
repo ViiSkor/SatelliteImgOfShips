@@ -6,11 +6,11 @@ meta:
 model:
   n_filters: 8
   upsample_mode: simple
-  net_scaling: (1, 1) # downsampling inside the network
+  net_scaling: [1, 1] # downsampling inside the network
   gaussian_noise: 0.1
 
 preprocessing:
-  img_scaling: (3, 3) # downsampling in preprocessing
+  img_scaling: [3, 3] # downsampling in preprocessing
 
 train:
   learning_rate: 1e-3
