@@ -11,16 +11,45 @@ DEFAULT_RANDOM_SEED = 42
 
 
 def seed_basic(seed: int=DEFAULT_RANDOM_SEED):
+    """
+    Set random seeds for basic Python, NumPy, and hash seed.
+
+    This function sets random seeds for Python's built-in random module, NumPy, and Python's hash seed for reproducible
+    randomness.
+
+    Parameters:
+    - seed (int): The random seed to be set. Default is 42.
+    """
+
     random.seed(seed)
     os.environ['PYTHONHASHSEED'] = str(seed)
     np.random.seed(seed)
 
 
 def seed_tf(seed: int=DEFAULT_RANDOM_SEED):
+    """
+    Set the random seed for TensorFlow.
+
+    This function sets the random seed for TensorFlow to ensure reproducible results.
+
+    Parameters:
+    - seed (int): The random seed to be set. Default is 42.
+    """
+
     tf.random.set_seed(seed)
 
 
 def seed_everything(seed: int=DEFAULT_RANDOM_SEED):
+    """
+    Set random seeds for various libraries.
+
+    This function sets random seeds for Python's built-in random module, NumPy, Python's hash seed, and TensorFlow
+    for consistent and reproducible results.
+
+    Parameters:
+    - seed (int): The random seed to be set. Default is 42.
+    """
+
     seed_basic(seed)
     seed_tf(seed)
 
@@ -75,7 +104,20 @@ def rle_decode(mask_rle: str, shape: tuple[int, int] = (768, 768)) -> np.array:
 
 
 def masks_as_image(in_mask_list: list, img_shape: tuple[int, int] = (768, 768)) -> np.array:
-    # Take the individual ship masks and create a single mask array for all ships
+    """
+    Create a binary mask array from a list of run-length-encoded (RLE) masks.
+
+    This function takes a list of run-length-encoded masks and combines them into a single binary mask array where
+    each pixel is set to 1 if any of the masks in the list indicate a pixel in the object.
+
+    Parameters:
+    - in_mask_list (list): A list of run-length-encoded masks (strings).
+    - img_shape (tuple): The shape of the output binary mask array. Default is (768, 768).
+
+    Returns:
+    - np.array: A binary mask array where 1 indicates the presence of an object.
+    """
+
     all_masks = np.zeros(img_shape, dtype=np.uint8)
     for mask in in_mask_list:
         if isinstance(mask, str):
@@ -84,7 +126,20 @@ def masks_as_image(in_mask_list: list, img_shape: tuple[int, int] = (768, 768)) 
 
 
 def scale(x, in_mask_list):
-    # scale the heatmap image to shift
+    """
+    Scale a heatmap image to shift its intensity.
+
+    This function scales a heatmap image to shift its intensity for visualization purposes. It is used to create
+    a color mask array for each ship in the input list of run-length-encoded masks.
+
+    Parameters:
+    - x: A value representing the index of the current mask being processed.
+    - in_mask_list (list): A list of run-length-encoded masks.
+
+    Returns:
+    - float: The scaled value used to adjust the intensity of the heatmap.
+    """
+
     return (len(in_mask_list) + x + 1) / (len(in_mask_list) * 2)
 
 

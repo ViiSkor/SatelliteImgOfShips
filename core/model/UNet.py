@@ -3,6 +3,34 @@ from core.model.blocks import upsample_conv, upsample_simple, encoder_block, dec
 
 
 def init_model(config: dict, input_shape: tuple=(256, 256, 3)) -> models.Model:
+    """
+    Initialize and build a U-Net-style image segmentation model.
+
+    This function constructs a U-Net architecture for image segmentation based on the provided configuration.
+
+    Parameters:
+    - config (dict): A dictionary containing model configuration settings.
+    - input_shape (tuple): Tuple specifying the input image shape, default is (256, 256, 3).
+
+    Returns:
+    - models.Model: A Keras Model representing the U-Net-style image segmentation model.
+
+    Configuration Settings:
+    - 'n_filters' (int): Number of initial filters in the model.
+    - 'upsample_mode' (str): Upsampling mode, either 'DECONV' for deconvolution or 'SIMPLE' for simple upsampling.
+    - 'net_scaling' (int, None): Scale factor for downscaling and subsequent upscaling of the network.
+    If None, no scaling is applied.
+    - 'gaussian_noise' (float): Standard deviation of Gaussian noise applied to the input.
+
+    Example Configuration:
+    config = {
+        'n_filters': 64,
+        'upsample_mode': 'DECONV',
+        'net_scaling': 2,
+        'gaussian_noise': 0.01
+    }
+    """
+
     n_filters = config['n_filters']
 
     if config['upsample_mode'] == 'DECONV':

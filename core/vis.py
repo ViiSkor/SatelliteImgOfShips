@@ -7,6 +7,16 @@ from core.utils import masks_as_color, multi_rle_encode
 
 
 def show_loss(loss_history):
+    """
+    Display a plot of training and validation loss over epochs.
+
+    This function takes the loss history from a model's training and displays a plot showing the training and validation
+    loss over epochs, as well as binary accuracy.
+
+    Parameters:
+    - loss_history: A list of training history objects.
+    """
+
     epochs = np.concatenate([mh.epoch for mh in loss_history])
     _, (ax1, ax2) = plt.subplots(1, 2, figsize=(22, 10))
 
@@ -24,6 +34,20 @@ def show_loss(loss_history):
 
 
 def visualize_preds(model, img_dir, masks, df):
+    """
+    Visualize model predictions, ground truth, and input images for a sample of images.
+
+    This function takes a trained model, image directory, mask information, and a DataFrame containing image metadata.
+    It visualizes the model's predictions, ground truth, and input images for a sample of images with
+    different ship counts.
+
+    Parameters:
+    - model: The trained semantic segmentation model.
+    - img_dir (str): The directory path where image data is located.
+    - masks: A list of encoded masks for the images.
+    - df: A DataFrame containing image metadata.
+    """
+
     ## Get a sample of each group of ship count
     samples = df.groupby('ships').apply(lambda x: x.sample(1))
     _, m_axs = plt.subplots(samples.shape[0], 4, figsize = (15, samples.shape[0]*4))
