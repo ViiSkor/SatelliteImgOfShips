@@ -11,7 +11,7 @@ Implemented approach is pretty simple.
 * Undersampling
 * Augmentation
 * BatchNormalization
-* Dice + BSE Loss
+* Dice + BCE Loss
 
 ### Technologies
 * Python 3.9
@@ -69,8 +69,8 @@ To verify that your code adheres to python standards run linting as shown below:
 
 
 ## Featured Notebooks
-* [EDA Notebook](link)
-* [Kaggle Notebook](link)
+* [EDA Notebook](https://github.com/ViiSkor/SatelliteImgOfShips/blob/master/notebooks/airbus-eda.ipynb)
+* [Kaggle Notebook](https://github.com/ViiSkor/SatelliteImgOfShips/blob/master/notebooks/kaggle-notebook.ipynb)
 
 ## Project Contents
 
@@ -83,7 +83,7 @@ To verify that your code adheres to python standards run linting as shown below:
 │
 ├── notebooks                <- Notebooks for analysis and testing
 │   ├── airbus-eda           <- Notebooks for EDA
-│   └── Kaggle_Notebook      <- Notebooks for Kaggle notebook that was used to run this project and inference testing.
+│   └── kaggle-notebook      <- Notebooks for Kaggle notebook that was used to run this project and inference testing.
 │
 ├── core                     <- Code for use in this project.
 │   ├── data                 <- Example python package - place shared code in such a package
