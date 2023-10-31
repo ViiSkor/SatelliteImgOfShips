@@ -2,7 +2,7 @@ from tensorflow.keras import models, layers
 from core.model.blocks import upsample_conv, upsample_simple, encoder_block, decoder_block
 
 
-def init_model(config: dict, input_shape: tuple=(256, 256, 3)) -> models.Model:
+def init_model(config: dict, input_shape: tuple=(None, 256, 256, 3)) -> models.Model:
     n_filters = config['n_filters']
 
     if config['upsample_mode'] == 'DECONV':

@@ -13,22 +13,19 @@ preprocessing:
   img_scaling: [3, 3] # downsampling in preprocessing
 
 train:
-  learning_rate: 1e-3
+  learning_rate: 0.003
   batch_size: 64
   epochs: 100
-  steps: 10
   shuffle: True
   do_augmentation: True
   reduceLROnPlat:
     factor: 0.33
     patience: 2
     min_delta: 0.0001
-    min_lr: 1e-8
+    min_lr: 0.00000001
     cooldown: 0
   EarlyStopping:
     patience: 10
   checkpoint:
     save_best_only: True
     save_weights_only: True
-
-

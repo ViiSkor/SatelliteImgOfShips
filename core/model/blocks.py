@@ -14,7 +14,10 @@ def upsample_conv(
 
 
 def upsample_simple(
-        strides: tuple[int, int]
+        filters: int,
+        kernel_size: tuple[int, int],
+        strides: tuple[int, int],
+        padding: Union['valid', 'same']
 ) -> tf.Tensor:
     return layers.UpSampling2D(strides)
 
