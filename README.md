@@ -1,15 +1,17 @@
 # [DS Basics | Project sample] Satellite Images Of Ships
 This project is a example of basic data science project.
 
-#### - Project Status: [In Process]
+#### - Project Status: [In Progress]
 
 ## Project Objective
 The Airbus Ship Detection Challenge aims to develop advanced machine learning solutions for accurately detecting and classifying ships in satellite imagery. This technology has the potential to bolster maritime security, protect marine ecosystems, and improve trade efficiency, contributing to a safer and more sustainable future for our oceans and society.
 ### Methods Used
+Implemented approach is pretty simple.
 * Semantic Segmentation
 * Undersampling
 * Augmentation
-* etc.
+* BatchNormalization
+* Dice + BSE Loss
 
 ### Technologies
 * Python 3.9
@@ -36,9 +38,70 @@ The Airbus Ship Detection Challenge aims to develop advanced machine learning so
 
 5. Follow setup [instructions](Link to file)
 
-### Run Pyling
-```pylint core/*```
+
+#### Setup using
+```
+cd SatelliteImgOfShips
+python -m venv dst-env
+```
+
+#### Activate environment
+Max / Linux
+```
+source dst-env/bin/activate
+```
+
+#### Install Dependencies
+```
+pip install -r requirements.txt
+```
+
+    
+#### Testing
+To run the test, install pytest using pip or conda and then from the repository root run
+ 
+    pytest tests/test_model.py
+
+#### Linting
+To verify that your code adheres to python standards run linting as shown below:
+
+    pylint core/*
+
 
 ## Featured Notebooks
 * [EDA Notebook](link)
 * [Kaggle Notebook](link)
+
+## Project Contents
+
+```
+├── .gitignore               <- Files that should be ignored by git. Add seperate .gitignore files in sub folders if 
+│                               needed
+├── config.yml               <- Config with hyperparameters and meto info.
+├── README.md                <- The top-level README for developers using this project.
+├── requirements.txt         <- The requirements file for reproducing the environment.
+│
+├── notebooks                <- Notebooks for analysis and testing
+│   ├── airbus-eda           <- Notebooks for EDA
+│   └── Kaggle_Notebook      <- Notebooks for Kaggle notebook that was used to run this project and inference testing.
+│
+├── core                     <- Code for use in this project.
+│   ├── data                 <- Example python package - place shared code in such a package
+│   ├── ├── __init__.py      <- Python package initialisation
+│   │   ├── preprocessing.py <- Scripts for preprocessing and data generator
+│   │   └── read_data.py     <- Script that read and clean raw data
+│   ├── model                <- Example python package - place shared code in such a package
+│   │   ├── __init__.py      <- Python package initialisation
+│   │   ├── blocks.py        <- U-Net blocks implementation
+│   │   └── UNet.py          <- U-Net initialization
+│   ├── __init__.py          <- Python package initialisation
+│   ├── callbacks.py         <- Example python package - place shared code in such a package
+│   ├── inference.py         <- Method for inference
+│   ├── losses.py            <- Implementation of Dice + BCE loss
+│   ├── metrics.py           <- Implementation of dice metric
+│   ├── utils.py             <- Utility methods
+│   └── vis.py               <- Visualization methods for losses and predictions
+│
+└── tests                    <- Test cases (named after module)
+    └── test_model.py        <- Example testing with check on overfitting ability.
+```
