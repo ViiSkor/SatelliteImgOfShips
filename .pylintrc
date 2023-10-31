@@ -59,7 +59,7 @@ confidence=
 #
 # Kubeflow disables string-interpolation because we are starting to use f
 # style strings
-disable=useless-suppression,suppressed-message,missing-docstring,invalid-name,no-member,locally-disabled,fixme,import-error,too-many-locals,no-name-in-module,too-many-instance-attributes,logging-fstring-interpolation
+disable=too-many-arguments,unused-argument,inconsistent-return-statements,useless-suppression,suppressed-message,missing-docstring,invalid-name,no-member,locally-disabled,fixme,import-error,too-many-locals,no-name-in-module,too-many-instance-attributes,logging-fstring-interpolation
 
 
 [REPORTS]

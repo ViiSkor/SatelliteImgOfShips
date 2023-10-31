@@ -1,11 +1,10 @@
-import numpy as np
-import tensorflow.keras.backend as K
+import tensorflow as tf
+from tensorflow.keras.losses import binary_crossentropy
+from core.metrics import dice_coef
 
 
-def IoU(y_true, y_pred, eps=1e-6):
-    if np.max(y_true) == 0.:
-        return IoU(1-y_true, 1-y_pred) ## empty image; calc IoU of zeros
+def dice_p_bce(y_true, y_pred):
+    y_true = tf.cast(y_true, dtype=tf.float32)
+    y_pred = tf.cast(y_pred, dtype=tf.float32)
 
-    intersection = K.sum(y_true * y_pred, axis=[1, 2, 3])
-    union = K.sum(y_true, axis=[1, 2, 3]) + K.sum(y_pred, axis=[1, 2, 3]) - intersection
-    return -K.mean( (intersection + eps) / (union + eps), axis=0)
+    return 1e-3 * binary_crossentropy(y_true, y_pred) - dice_coef(y_true, y_pred)

@@ -2,7 +2,7 @@ from tensorflow.keras import models, layers
 from core.model.blocks import upsample_conv, upsample_simple, encoder_block, decoder_block
 
 
-def init_model(config: dict, input_shape: tuple=(None, 256, 256, 3)) -> models.Model:
+def init_model(config: dict, input_shape: tuple=(256, 256, 3)) -> models.Model:
     n_filters = config['n_filters']
 
     if config['upsample_mode'] == 'DECONV':
@@ -23,16 +23,18 @@ def init_model(config: dict, input_shape: tuple=(None, 256, 256, 3)) -> models.M
     enc2 = encoder_block(enc1[0], n_filters * 2)
     enc3 = encoder_block(enc2[0], n_filters * 4)
     enc4 = encoder_block(enc3[0], n_filters * 8)
+    enc5 = encoder_block(enc4[0], n_filters * 16)
 
-    c5 = layers.Conv2D(n_filters * 16, (3, 3), activation='relu', padding='same')(enc4[0])
-    c5 = layers.Conv2D(n_filters * 16, (3, 3), activation='relu', padding='same')(c5)
+    c6 = layers.Conv2D(n_filters * 32, (3, 3), activation='relu', padding='same')(enc5[0])
+    c6 = layers.Conv2D(n_filters * 32, (3, 3), activation='relu', padding='same')(c6)
 
-    dec1 = decoder_block(c5, enc4[1], n_filters * 8, upsample)
-    dec2 = decoder_block(dec1, enc3[1], n_filters * 4, upsample)
-    dec3 = decoder_block(dec2, enc2[1], n_filters * 2, upsample)
-    dec4 = decoder_block(dec3, enc1[1], n_filters, upsample)
+    dec1 = decoder_block(c6, enc5[1], n_filters * 16, upsample)
+    dec2 = decoder_block(dec1, enc4[1], n_filters * 8, upsample)
+    dec3 = decoder_block(dec2, enc3[1], n_filters * 4, upsample)
+    dec4 = decoder_block(dec3, enc2[1], n_filters * 2, upsample)
+    dec5 = decoder_block(dec4, enc1[1], n_filters, upsample)
 
-    dec = layers.Conv2D(1, (1, 1), activation='sigmoid')(dec4)
+    dec = layers.Conv2D(1, (1, 1), activation='sigmoid')(dec5)
 
     if config['net_scaling'] is not None:
         dec = layers.UpSampling2D(config['net_scaling'])(dec)

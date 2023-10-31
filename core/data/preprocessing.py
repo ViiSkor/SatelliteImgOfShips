@@ -1,9 +1,9 @@
 import os
-from typing import Optional, Tuple
+from typing import Tuple
 
 import numpy as np
 import pandas as pd
-import albumentations as A
+import tensorflow as tf
 from skimage.io import imread
 from sklearn.model_selection import train_test_split
 
@@ -42,6 +42,9 @@ class SemanticSegmentationDataGenerator(tf.keras.utils.Sequence):
         return len(self.in_df) // self.batch_size
 
     def __getitem__(self, index):
+        if self.shuffle_batches:
+            np.random.shuffle(self.all_batches)
+
         for c_img_id, c_masks in self.all_batches:
             rgb_path = os.path.join(self.img_dir, c_img_id)
             c_img = imread(rgb_path)
@@ -60,11 +63,11 @@ class SemanticSegmentationDataGenerator(tf.keras.utils.Sequence):
             self.out_mask.append(c_mask)
 
             if len(self.out_rgb) >= self.batch_size:
-                batch_rgb = tf.convert_to_tensor(np.stack(self.out_rgb, 0) / 255.0, dtype=tf.float32)
-                batch_mask = tf.convert_to_tensor(np.stack(self.out_mask, 0), dtype=tf.float32)
-                self.out_rgb.clear(), self.out_mask.clear()
+                batch_rgb = np.stack(self.out_rgb, 0) / 255.0
+                batch_mask = np.stack(self.out_mask, 0)
+                self.out_rgb, self.out_mask = [], []
                 return batch_rgb, batch_mask
 
-        def on_epoch_end(self):
-            if self.shuffle_batches:
-                np.random.shuffle(self.all_batches)
+    def on_epoch_end(self):
+        if self.shuffle_batches:
+            np.random.shuffle(self.all_batches)

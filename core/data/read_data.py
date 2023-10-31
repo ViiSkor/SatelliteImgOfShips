@@ -20,6 +20,7 @@ def get_metadata(
     unique_img_ids['file_size_kb'] = unique_img_ids['ImageId'].map(
         lambda c_img_id: os.stat(os.path.join(train_image_dir, c_img_id)).st_size / 1024, meta=('ImageId', int)
     )
+    unique_img_ids = unique_img_ids[unique_img_ids['file_size_kb'] > 50] # keep only +50kb files
 
     unique_img_ids = unique_img_ids.compute()
     masks = masks.compute()

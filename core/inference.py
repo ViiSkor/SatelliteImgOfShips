@@ -13,6 +13,8 @@ def create_full_res_model(model, img_scaling: tuple[int, int]):
         fullres_model.add(layers.AvgPool2D(img_scaling, input_shape=(None, None, 3)))
         fullres_model.add(model)
         fullres_model.add(layers.UpSampling2D(img_scaling))
+        return fullres_model
+
     return model
 
 
