@@ -4,6 +4,7 @@ from pathlib import Path
 import yaml
 import pytest
 import numpy as np
+import tensorflow as tf
 from skimage.draw import rectangle
 from tensorflow.keras.optimizers import AdamW
 
@@ -36,6 +37,7 @@ def config() -> dict:
 
 @pytest.fixture()
 def loss_from_one_batch_trained_model(config: dict, toy_data: Tuple[np.array, np.array]):
+    tf.config.set_visible_devices([], 'GPU')
     model = init_model(config['model'])
     model.compile(optimizer=AdamW(learning_rate=0.001), loss=dice_p_bce, run_eagerly=True)
 
