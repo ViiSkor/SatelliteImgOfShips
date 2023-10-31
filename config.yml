@@ -18,6 +18,7 @@ train:
   epochs: 100
   steps: 10
   shuffle: True
+  do_augmentation: True
   reduceLROnPlat:
     factor: 0.33
     patience: 2

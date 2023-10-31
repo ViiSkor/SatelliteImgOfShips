@@ -10,3 +10,5 @@ pandas==2.0.3
 numpy==1.23.5
 dask==2023.9.0
 tensorflow==2.12.0
+pyyaml
+scikit-learn
