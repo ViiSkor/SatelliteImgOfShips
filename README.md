@@ -29,34 +29,67 @@ Implemented approach is pretty simple.
 ## Getting Started
 
 1. Clone this repo (for help see this [tutorial](https://help.github.com/articles/cloning-a-repository/)).
-2. Raw Data is being kept [here].
+2. Raw Data is being kept [here](https://www.kaggle.com/competitions/airbus-ship-detection/data).
+3. You could use kaggle notebook, in this case you don't need to download data, just connect it to this [notebook]((https://github.com/ViiSkor/SatelliteImgOfShips/blob/master/notebooks/kaggle-notebook.ipynb)).
+4. But, firstly load this notebook at Kaggle.
 
-3. Data processing/transformation scripts are being kept [here](Repo folder containing data processing scripts/notebooks)
-4. etc...
-
-*If your project is well underway and setup is fairly complicated (ie. requires installation of many packages) create another "setup.md" file and link to it here*  
-
-5. Follow setup [instructions](Link to file)
-
-
-#### Setup using
+#### Run loccaly
+### Setup
 ```
 cd SatelliteImgOfShips
 python -m venv dst-env
-```
-
-#### Activate environment
-Max / Linux
-```
 source dst-env/bin/activate
-```
-
-#### Install Dependencies
-```
 pip install -r requirements.txt
 ```
 
+# Run training
+```
+import os
+import yaml
+
+import albumentations as A
+import tensorflow as tf
+from tensorflow.keras.optimizers import Adam
+from sklearn.model_selection import train_test_split
+
+from core.data.read_data import get_metadata
+from core.data.preprocessing import undersample, SemanticSegmentationDataGenerator, get_train_val_sets
+from core.model.UNet import init_model
+from core.vis import show_loss, visualize_preds
+from core.utils import seed_everything
+from core.callbacks import get_callbacks
+from core.inference import create_full_res_model
+from core.metrics import dice_coef
+from core.train import train
+
+tf.config.run_functions_eagerly(True)
+
+with open('SatelliteImgOfShips/config.yml', 'r') as yamlfile:
+    config = yaml.load(yamlfile.read(), Loader=yaml.FullLoader)
     
+seed_everything(config['meta']['seed'])
+
+ship_dir = '../input/airbus-ship-detection'
+mask_dir = os.path.join(ship_dir, 'train_ship_segmentations_v2.csv')
+train_image_dir = os.path.join(ship_dir, 'train_v2')
+
+balanced_df = undersample(unique_img_ids, samples_per_group=2000)
+train_df, valid_df = get_train_val_sets(balanced_df, masks)
+
+seg_model = init_model(config['model'])
+
+transform = A.Compose(
+        [
+            A.HorizontalFlip(),
+            A.VerticalFlip(),
+            A.RandomRotate90(),
+            A.ShiftScaleRotate(rotate_limit=45, shift_limit=0.1, scale_limit=[0.9, 1.25]),
+        ], p=0.4)
+
+callbacks = get_callbacks('segmentation_model', config['train'])
+seg_model, loss_history = train(seg_model, train_image_dir, config['train'], config['preprocessing']['img_scaling'], callbacks, train_df, valid_df, transform)
+```
+
 #### Testing
 To run the test, install pytest using pip or conda and then from the repository root run
  
